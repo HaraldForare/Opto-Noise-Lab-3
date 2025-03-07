@@ -37,7 +37,7 @@ class ExponentialModel:
 
 # The resistor over which we measure photodiode current
 RL = 100E3
-
+Vb = 9
 
 
 
@@ -93,6 +93,11 @@ Iled_mA_noise_N_biased = np.array((
 
 
 
+
+
+
+
+
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
@@ -107,7 +112,7 @@ if __name__ == "__main__":
 
 
 
-    plt.figure("9V Reverse Biased")
+    plt.figure(f"{Vb}V Reverse Biased")
     plt.loglog(Iled_mA_Vphoto_mV_biased[:, 0], Iled_mA_Vphoto_mV_biased[:, 1], marker="x", label="Data")
     plt.loglog(
         Iled_mA_Vphoto_mV_biased[:, 0],
@@ -121,7 +126,7 @@ if __name__ == "__main__":
     plt.legend()
 
 
-    plt.figure("9V Reverse Biased Noise")
+    plt.figure(f"{Vb}V Reverse Biased Noise")
     plt.loglog(Iled_mA_noise_N_biased[:, 0], Iled_mA_noise_N_biased[:, 1], marker="x")
     plt.xlabel("LED Current [mA]")
     plt.ylabel("Noise Spectral Density [uV/sqrt(Hz)]")
