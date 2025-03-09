@@ -27,7 +27,16 @@ snr_read_noise_pred = signal_pred / read_noise
 
 
 
+eq_shot_and_read_index = np.argmin(np.abs(snr_read_noise_pred - snr_shot_noise_pred))
+eq_shot_and_read_signal = signal_pred[eq_shot_and_read_index]
+
+
+
 if __name__ == "__main__":
+
+    print(f"Shot and read noise is equal when the signal is {eq_shot_and_read_signal} counts")
+
+
 
     import matplotlib.pyplot as plt
 
@@ -36,6 +45,8 @@ if __name__ == "__main__":
     plt.loglog(signal, snr, marker="x", label="Camera performance")
     plt.loglog(signal_pred, snr_shot_noise_pred, linestyle=":", label="Shot noise limit")
     plt.loglog(signal_pred, snr_read_noise_pred, linestyle=":", label="Read noise limit")
+
+    plt.axvline(eq_shot_and_read_signal, linestyle=":", label="Equal read and shot noise")
 
     plt.xlabel("Signal [counts]")
     plt.ylabel("SNR [1]")
