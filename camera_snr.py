@@ -53,6 +53,15 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.legend()
 
+
+    plt.figure("SNR_vs_exposure_time")
+    plt.loglog(exposure_time, snr, marker="x")
+    plt.xlabel("Exposure time [s]")
+    plt.ylabel("SNR [1]")
+    plt.grid(True)
+    #plt.legend()
+
+
     plt.show()
 
 
