@@ -5,6 +5,7 @@ from scipy.io import loadmat
 import numpy as np
 
 
+resolution = 1000
 
 exposure_time = loadmat("data/camera_snr/exposure_time.mat")["StatsTime"].flatten()
 signal = loadmat("data/camera_snr/mean_count.mat")["StatsMean"].flatten()
@@ -18,7 +19,7 @@ assert exposure_time.shape == signal.shape == noise.shape
 
 
 
-signal_pred = np.geomspace(np.min(signal), np.max(signal), 1000)
+signal_pred = np.geomspace(np.min(signal), np.max(signal), resolution)
 snr_shot_noise_pred = np.sqrt(signal_pred)
 
 
@@ -29,6 +30,11 @@ snr_read_noise_pred = signal_pred / read_noise
 
 eq_shot_and_read_index = np.argmin(np.abs(snr_read_noise_pred - snr_shot_noise_pred))
 eq_shot_and_read_signal = signal_pred[eq_shot_and_read_index]
+
+
+
+
+exposure_time_pred = np.geomspace(np.min(exposure_time), np.max(exposure_time), resolution)
 
 
 
@@ -61,6 +67,11 @@ if __name__ == "__main__":
     plt.grid(True)
     #plt.legend()
 
+
+
+    plt.figure("signal_vs_exposure_time")
+    plt.loglog(exposure_time, signal, marker="x")
+    plt.grid()
 
     plt.show()
 
