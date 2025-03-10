@@ -92,6 +92,9 @@ Iled_mA_noise_N_biased = np.array((
 
 
 
+voltage_left_for_diode = None
+
+
 
 
 
@@ -104,22 +107,32 @@ if __name__ == "__main__":
 
 
 
-    plt.figure("Unbiased")
-    plt.loglog(Iled_mA_Vphoto_mV_unbiased[:, 0], Iled_mA_Vphoto_mV_unbiased[:, 1], marker="x")
-    plt.xlabel("LED Current [mA]")
-    plt.ylabel("Resistor Voltage [mV]")
-    plt.grid(True)
+    #plt.figure("Resistor Voltave vs. LED Current")
+    plt.figure("diode_V_vs_LED_I")
+    plt.loglog(
+        Iled_mA_Vphoto_mV_unbiased[:, 0],
+        Iled_mA_Vphoto_mV_unbiased[:, 1],
+        marker="x",
+        label="Unbiased"
+    )
 
 
-
-    plt.figure(f"{Vb}V Reverse Biased")
-    plt.loglog(Iled_mA_Vphoto_mV_biased[:, 0], Iled_mA_Vphoto_mV_biased[:, 1], marker="x", label="Data")
+    #plt.figure(f"{Vb}V Reverse Biased")
     plt.loglog(
         Iled_mA_Vphoto_mV_biased[:, 0],
-        reverse_bias_model.y(Iled_mA_Vphoto_mV_biased[:, 0]),
-        linestyle=":",
-        label="Model"
+        Iled_mA_Vphoto_mV_biased[:, 1],
+        marker="x",
+        label=f"{Vb}V Reverse Biased"
     )
+
+    if False:
+        plt.loglog(
+            Iled_mA_Vphoto_mV_biased[:, 0],
+            reverse_bias_model.y(Iled_mA_Vphoto_mV_biased[:, 0]),
+            linestyle=":",
+            label=f"{Vb}V Reverse Biased Exponential Model"
+        )
+
     plt.xlabel("LED Current [mA]")
     plt.ylabel("Resistor Voltage [mV]")
     plt.grid(True)
