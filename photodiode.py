@@ -2,7 +2,7 @@
 
 import numpy as np
 
-
+from exponential_model import *
 
 
 def print_suggested_points():
@@ -17,28 +17,9 @@ if __name__ == "__main__":
 
 
 
-class ExponentialModel:
-    def __init__(self, X, Y):
-        X_log = np.log2(X)
-        Y_log = np.log2(Y)
-        self.p = np.polyfit(X_log, Y_log, 1)
-
-
-    def y(self, x):
-        x_log = np.log2(x)
-        y_log = np.polyval(self.p, x_log)
-        y = np.exp2(y_log)
-        return y
-
-
-
-
-
-
 # The resistor over which we measure photodiode current
 RL = 100E3
 Vb = 9
-
 
 
 Iled_mA_Vphoto_mV_unbiased = np.array((
@@ -53,8 +34,6 @@ Iled_mA_Vphoto_mV_unbiased = np.array((
     (27.017, 486),
     (55.3, 505)
 ))
-
-
 
 
 
@@ -90,14 +69,13 @@ Iled_mA_noise_N_biased = np.array((
     (52.038, 0.024)
 ))
 
-
+e_ch = 1.6022E-19
+photonshot_noise = Iled_mA_noise_N_biased.copy()
+photonshot_noise[:,1] = np.sqrt(2*photonshot_noise[:,0]*10E5*e_ch*17.2)
 
 voltage_left_for_diode = None
 
-
-
-
-
+# SNR = (CORRIENTE SOBRE SIGMA)^2
 
 
 
@@ -107,7 +85,7 @@ if __name__ == "__main__":
 
 
 
-    #plt.figure("Resistor Voltave vs. LED Current")
+    #plt.figure("Resistor Voltage vs. LED Current")
     plt.figure("diode_V_vs_LED_I")
     plt.loglog(
         Iled_mA_Vphoto_mV_unbiased[:, 0],
@@ -135,7 +113,7 @@ if __name__ == "__main__":
 
     plt.xlabel("LED Current [mA]")
     plt.ylabel("Resistor Voltage [mV]")
-    plt.grid(True)
+    plt.grid(True,which="both",ls="-", color='0.65')
     plt.legend()
 
 
@@ -143,8 +121,17 @@ if __name__ == "__main__":
     plt.loglog(Iled_mA_noise_N_biased[:, 0], Iled_mA_noise_N_biased[:, 1], marker="x")
     plt.xlabel("LED Current [mA]")
     plt.ylabel("Noise Spectral Density [uV/sqrt(Hz)]")
-    plt.grid(True)
+    plt.grid(True,which="both",ls="-", color='0.65')
+
+    #plt.show()
+    
+    plt.figure(f"{Vb}V Reverse Biased Noise2")
+    plt.loglog(Iled_mA_noise_N_biased[:, 0], Iled_mA_noise_N_biased[:, 1]*np.sqrt(17.2)*10E-6, marker="x",label="Experimental Noise")
+    plt.loglog(photonshot_noise[:,0], photonshot_noise[:,1], marker='x',label="Theoretical Photon Shot Noise")
+    plt.xlabel("LED Voltage [V]")
+    plt.ylabel("Noise [V]")
+    plt.legend()
+    plt.grid(True,which="both",ls="-", color='0.65')
 
     plt.show()
-
 
